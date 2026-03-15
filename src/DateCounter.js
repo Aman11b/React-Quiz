@@ -1,7 +1,17 @@
-import { useState } from "react";
+import { act, useReducer, useState } from "react";
+
+function reducer(curState, action) {
+  console.log(curState, action);
+  // return curState + action;
+  if (action.type === "inc") return curState + 1;
+  if (action.type === "dec") return curState - 1;
+  if (action.type === "setCount") return action.payload;
+}
 
 function DateCounter() {
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
+
+  const [count, dispatch] = useReducer(reducer, 0);
   const [step, setStep] = useState(1);
 
   // This mutates the date object.
@@ -9,17 +19,20 @@ function DateCounter() {
   date.setDate(date.getDate() + count);
 
   const dec = function () {
+    dispatch({ type: "dec" });
     // setCount((count) => count - 1);
-    setCount((count) => count - step);
+    // setCount((count) => count - step);
   };
 
   const inc = function () {
     // setCount((count) => count + 1);
-    setCount((count) => count + step);
+    // setCount((count) => count + step);
+    dispatch({ type: "inc" });
   };
 
   const defineCount = function (e) {
-    setCount(Number(e.target.value));
+    dispatch({ type: "setCount", payload: Number(e.target.value) });
+    // setCount(Number(e.target.value));
   };
 
   const defineStep = function (e) {
@@ -27,7 +40,7 @@ function DateCounter() {
   };
 
   const reset = function () {
-    setCount(0);
+    // setCount(0);
     setStep(1);
   };
 
@@ -59,3 +72,9 @@ function DateCounter() {
   );
 }
 export default DateCounter;
+
+/**
+ * useReducer hook
+ * -> more advance and complex way to manager state
+ * - useReducer hook works wth reducer function(pure function),that takes previous state so-called action as an argument and then return the next state
+ */
